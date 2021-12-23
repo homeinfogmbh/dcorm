@@ -3,6 +3,8 @@
 from contextlib import suppress
 from typing import Any
 
+from dcorm.containers import CONTAINERS
+
 
 __all__ = ['sql']
 
@@ -21,5 +23,8 @@ def sql(obj: Any) -> str:
 
     if isinstance(obj, (int, float)):
         return str(obj)
+
+    if isinstance(obj, CONTAINERS):
+        return f"({', '.join(sql(item) for item in obj)})"
 
     raise TypeError(f'Cannot convert {type(obj)} to SQL.')
