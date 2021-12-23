@@ -43,6 +43,7 @@ class SelectQuery(Query):
         self._order_by: list[OrderedField] = []
         self._limit: Optional[int] = None
         self._offset: Optional[int] = None
+        self._alias_manager: AliasManager = AliasManager()
 
     @property
     def _fields(self) -> Iterator[Field]:
@@ -82,7 +83,7 @@ class SelectQuery(Query):
 
     def execute(self, database: Optional[Database] = None):
         """Executes the query."""
-        with AliasManager() as manager:
+        with self._alias_manager as manager:
             manager.register_aliases(self._aliases)
             return super().execute(database=database)
 
