@@ -3,6 +3,7 @@
 from dataclasses import MISSING
 from typing import Iterator, Union
 
+from dcorm.alias import Alias
 from dcorm.field import Field
 from dcorm.model import Model, ModelType
 
@@ -24,13 +25,13 @@ def record_fields(record: Model) -> Iterator[Field]:
         yield Field(type(record), field, getattr(record, attribute, MISSING))
 
 
-def fields(obj: Union[ModelType, Model]) -> Iterator[Field]:
+def fields(obj: Union[Alias, Model, ModelType]) -> Iterator[Field]:
     """Yields fields from the model."""
-
-    if isinstance(obj, ModelType):
-        return model_fields(obj)
 
     if isinstance(obj, Model):
         return record_fields(obj)
+
+    if isinstance(obj, (Alias, ModelType)):
+        return model_fields(obj)
 
     raise TypeError(f'Cannot extract fields from {type(obj)}.')
