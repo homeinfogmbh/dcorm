@@ -6,6 +6,7 @@ from typing import Any, Optional
 from dcorm.alias import Alias
 from dcorm.database import Database
 from dcorm.field import Field
+from dcorm.sql import Engine, TableIdentifier
 
 
 __all__ = ['ModelType', 'Model']
@@ -22,18 +23,11 @@ class ModelType(type):
 
         return None
 
-    @property
-    def __namespace__(cls) -> str:
-        """Returns the namespace path of the table."""
+    def __sql__(cls, engine: Engine) -> Engine:
         if cls.__schema__ is None:
-            return cls.__table_name__
+            return engine.sql(TableIdentifier(cls.__table_name__))
 
-        return f'{cls.__schema__}.{cls.__table_name__}'
-
-    @property
-    def __sql__(cls) -> str:
-        """Returns an SQL string."""
-        return f'`{cls.__namespace__}`'
+        return engine.sql(TableIdentifier(cls.__schema__, cls.__table_name__))
 
 
 class Model(metaclass=ModelType):
