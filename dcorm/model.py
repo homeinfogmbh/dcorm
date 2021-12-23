@@ -50,9 +50,10 @@ class Model(metaclass=ModelType):
 
         super().__setattr__(attribute, value)
 
-    def alias(self, name: Optional[str] = None) -> Alias:
+    @classmethod
+    def alias(cls, name: Optional[str] = None) -> Alias:
         """Creates a model alias."""
-        return Alias(self, name)
+        return Alias(cls, name)
 
     @property
     def __schema__(self) -> str:
