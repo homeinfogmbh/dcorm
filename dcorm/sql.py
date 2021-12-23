@@ -13,8 +13,11 @@ def sql(obj: Any) -> str:
     with suppress(AttributeError):
         return obj.__sql__
 
+    if isinstance(obj, str):
+        return obj
+
     if isinstance(obj, bool):
-        return sql(int(obj))
+        return str(int(obj))
 
     if isinstance(obj, (int, float)):
         return str(obj)
