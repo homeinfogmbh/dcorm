@@ -62,7 +62,7 @@ class SelectQuery(Query):
         fields_ = ', '.join(sql(field) for field in self._fields)
         from_ = sql(self._from)
         where = sql(self._where)
-        return ' '.join([query, fields_, from_, where])
+        return ' '.join([query, fields_, 'FROM', from_, 'WHERE', where])
 
     @property
     def _fields(self) -> Iterator[Field]:
