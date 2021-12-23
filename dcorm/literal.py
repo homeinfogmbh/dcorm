@@ -3,7 +3,7 @@
 from typing import NamedTuple
 
 
-__all__ = ['Literal']
+__all__ = ['Literal', 'binary', 'unary']
 
 
 class Literal(NamedTuple):
@@ -24,3 +24,15 @@ class Literal(NamedTuple):
             return f'{self.keyword} '
 
         return self.keyword
+
+
+def binary(keyword: str) -> Literal:
+    """Return a literal for a binary operator."""
+
+    return Literal(keyword, space_left=True, space_right=True)
+
+
+def unary(keyword: str) -> Literal:
+    """Return a literal for a unary operator."""
+
+    return Literal(keyword, space_right=True)

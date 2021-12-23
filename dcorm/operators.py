@@ -2,22 +2,10 @@
 
 from enum import Enum
 
-from dcorm.literal import Literal
+from dcorm.literal import binary, unary
 
 
 __all__ = ['Operator']
-
-
-def unary(keyword: str) -> Literal:
-    """Return a literal for a unary operator."""
-
-    return Literal(keyword, space_right=True)
-
-
-def binary(keyword: str) -> Literal:
-    """Return a literal for a binary operator."""
-
-    return Literal(keyword, space_left=True, space_right=True)
 
 
 class Operator(Enum):
