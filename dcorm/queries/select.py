@@ -10,7 +10,7 @@ from dcorm.expression import Expression
 from dcorm.field import Field, OrderedField
 from dcorm.inspection import fields
 from dcorm.joins import Join, JoinType
-from dcorm.model import Model
+from dcorm.model import ModelType
 from dcorm.operations import Operation
 from dcorm.queries.query import Query
 from dcorm.relations import find_relation
@@ -20,7 +20,7 @@ from dcorm.sql import sql
 __all__ = ['select']
 
 
-SelectItem = Union[Alias, Model, Field]
+SelectItem = Union[Alias, ModelType, Field]
 
 
 def extract_fields(item: SelectItem) -> Iterator[Field]:
@@ -30,7 +30,7 @@ def extract_fields(item: SelectItem) -> Iterator[Field]:
         yield item
         return
 
-    if isinstance(item, (Alias, Model)):
+    if isinstance(item, (Alias, ModelType)):
         yield from fields(item)
         return
 
@@ -75,7 +75,8 @@ class SelectQuery(Query):
         """Filters out the used aliases."""
         return filter(lambda item: isinstance(item, Alias), self._items)
 
-    def join(self, other: Union[Alias, Model], typ: JoinType = JoinType.INNER,
+    def join(self, other: Union[Alias, ModelType],
+             typ: JoinType = JoinType.INNER,
              # pylint: disable-next=C0103
              on: Optional[Expression] = None) -> Query:
         """Updates the join."""
