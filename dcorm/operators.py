@@ -2,43 +2,52 @@
 
 from enum import Enum
 
+from dcorm.literal import Literal
+
 
 __all__ = ['Operator']
+
+
+def unary(keyword: str) -> Literal:
+    """Return a literal for a unary operator."""
+
+    return Literal(keyword, space_right=True)
+
+
+def binary(keyword: str) -> Literal:
+    """Return a literal for a binary operator."""
+
+    return Literal(keyword, space_left=True, space_right=True)
 
 
 class Operator(Enum):
     """Query operators."""
 
-    NOT = 'NOT'
-    AND = 'AND'
-    OR = 'OR'
-    ADD = '+'
-    SUB = '-'
-    MUL = '*'
-    DIV = '/'
-    BIN_AND = '&'
-    BIN_OR = '|'
-    XOR = '#'
-    MOD = '%'
-    EQ = '='
-    LT = '<'
-    LE = '<='
-    GT = '>'
-    GE = '>='
-    NE = '!='
-    IN = 'IN'
-    NOT_IN = 'NOT IN'
-    IS = 'IS'
-    IS_NOT = 'IS NOT'
-    LIKE = 'LIKE'
-    ILIKE = 'ILIKE'
-    BETWEEN = 'BETWEEN'
-    REGEXP = 'REGEXP'
-    IREGEXP = 'IREGEXP'
-    CONCAT = '||'
-    BITWISE_NEGATION = '~'
-
-    @property
-    def __sql__(self) -> str:
-        """Returns the SQL representation of the operator."""
-        return self.value
+    NOT = unary('NOT')
+    AND = binary('AND')
+    OR = binary('OR')
+    ADD = binary('+')
+    SUB = binary('-')
+    MUL = binary('*')
+    DIV = binary('/')
+    BIN_AND = binary('&')
+    BIN_OR = binary('|')
+    XOR = binary('#')
+    MOD = binary('%')
+    EQ = binary('=')
+    LT = binary('<')
+    LE = binary('<=')
+    GT = binary('>')
+    GE = binary('>=')
+    NE = binary('!=')
+    IN = binary('IN')
+    NOT_IN = binary('NOT IN')
+    IS = binary('IS')
+    IS_NOT = binary('IS NOT')
+    LIKE = binary('LIKE')
+    ILIKE = binary('ILIKE')
+    #BETWEEN = 'BETWEEN'    # Trinary!
+    #REGEXP = 'REGEXP'      # How is this used?
+    #IREGEXP = 'IREGEXP'
+    CONCAT = binary('||')
+    BITWISE_NEGATION = unary('~')
