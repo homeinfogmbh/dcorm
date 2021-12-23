@@ -6,7 +6,7 @@ from typing import Any, Callable, Optional, Union
 from dcorm.operators import Operator
 
 
-__all__ = ['type_generator']
+__all__ = ['expression_generator']
 
 
 def op_and(typ: type, *, inverse: bool = False) -> Callable:
@@ -243,8 +243,8 @@ METHODS = {
 }
 
 
-def type_generator(cls: Optional[type] = None, /, *,
-                   typ: Optional[type] = None) -> type:
+def expression_generator(cls: Optional[type] = None, /, *,
+                         typ: Optional[type] = None) -> type:
     """Decorates the class with the above magic methods."""
 
     def inner(target: Optional[type] = None) -> type:
