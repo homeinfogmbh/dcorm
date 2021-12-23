@@ -7,13 +7,13 @@ from dcorm.expression import Expression
 from dcorm.model import Model
 
 
-__all__ = ['get_relation']
+__all__ = ['find_relation']
 
 
 RelationType = Union[Alias, Model]
 
 
-def get_relation(lhs: RelationType, rhs: RelationType) -> Expression:
+def find_relation(lhs: RelationType, rhs: RelationType) -> Expression:
     """Returns a relation between the given models or aliases."""
 
     raise NotImplementedError()

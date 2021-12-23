@@ -7,7 +7,7 @@ from typing import NamedTuple, Optional, Union
 from dcorm.alias import Alias
 from dcorm.expression import Expression
 from dcorm.model import Model
-from dcorm.relations import get_relation
+from dcorm.relations import find_relation
 from dcorm.sql import sql
 
 
@@ -50,7 +50,7 @@ class Join(NamedTuple):
              on: Optional[Expression] = None) -> Join:
         """Returns a subsequent join."""
         if on is None:
-            on = get_relation(self.rhs, other)
+            on = find_relation(self.rhs, other)
 
         return type(self)(self, typ, other, on)
 
