@@ -1,6 +1,7 @@
-"""SQL statement generation."""
+"""SQL statement generation and base engine."""
 
 from contextlib import suppress
+from dataclasses import dataclass, field
 from datetime import date, datetime, time
 from decimal import Decimal
 from typing import Any
@@ -8,11 +9,11 @@ from typing import Any
 from dcorm.containers import CONTAINERS
 
 
-__all__ = ['sql']
+__all__ = ['sql', 'SQL', 'Engine']
 
 
 def sql(obj: Any) -> str:   # pylint: disable=R0911
-    """Reutrns an SQL representation of the given object."""
+    """Reutrns an SQL representation of the given object for printing."""
 
     if obj is None:
         return 'NULL'
@@ -42,3 +43,19 @@ def sql(obj: Any) -> str:   # pylint: disable=R0911
         return f"({', '.join(sql(item) for item in obj)})"
 
     raise TypeError(f'Cannot convert {type(obj)} to SQL.')
+
+
+@dataclass
+class SQL:
+    """An SQL object."""
+
+    formatstring: str
+    parameters: list[str] = field(default_factory=list)
+
+
+class Engine:   # pylint: disable=R0903
+    """An SQL engine."""
+
+    def sql(self, obj: Any) -> SQL:
+        """Returns an SQL object from any given object."""
+        raise NotImplementedError()
