@@ -6,11 +6,15 @@ from warnings import warn
 
 from dcorm.alias import Alias, AliasManager
 from dcorm.database import Database
+from dcorm.expression import Expression
 from dcorm.field import Field, OrderedField
 from dcorm.inspection import fields
+from dcorm.joins import Join, JoinType
 from dcorm.model import Model
 from dcorm.operations import Operation
 from dcorm.queries.query import Query
+from dcorm.relations import find_relation
+from dcorm.sql import sql
 
 
 __all__ = ['select']
@@ -36,14 +40,29 @@ def extract_fields(item: SelectItem) -> Iterator[Field]:
 class SelectQuery(Query):
     """A SELECT query."""
 
-    def __init__(self, *items: SelectItem):
+    def __init__(self, first: SelectItem, *other: SelectItem):
         """Returns a selection proxy object."""
         super().__init__(Operation.SELECT)
-        self._items = items
+        self._items = [first, *other]
+
+        if isinstance(first, Field):
+            self._from = first.table
+        else:
+            self._from = first
+
         self._order_by: list[OrderedField] = []
         self._limit: Optional[int] = None
         self._offset: Optional[int] = None
         self._alias_manager: AliasManager = AliasManager()
+
+    @property
+    def __sql__(self) -> str:
+        """Returns an SQL representation of the query."""
+        query = sql(self._operation)
+        fields_ = ', '.join(sql(field) for field in self._fields)
+        from_ = sql(self._from)
+        where = sql(self._where)
+        return ' '.join([query, fields_, from_, where])
 
     @property
     def _fields(self) -> Iterator[Field]:
@@ -55,6 +74,16 @@ class SelectQuery(Query):
     def _aliases(self) -> Iterator[Alias]:
         """Filters out the used aliases."""
         return filter(lambda item: isinstance(item, Alias), self._items)
+
+    def join(self, other: Union[Alias, Model], typ: JoinType = JoinType.INNER,
+             # pylint: disable-next=C0103
+             on: Optional[Expression] = None) -> Query:
+        """Updates the join."""
+        if on is None:
+            on = find_relation(self._from, other)
+
+        self._from = Join(self._from, typ, other, on)
+        return self
 
     def order_by(self, *items: Union[Field, OrderedField]) -> SelectQuery:
         """Updates the order-by clause."""
