@@ -27,9 +27,14 @@ class Field(NamedTuple):
         return OrderedField(self, Ordering.DESC)
 
     @property
+    def name(self) -> str:
+        """Returns the field name."""
+        return self.field.metadata.get('column_name', self.field.name)
+
+    @property
     def __sql__(self) -> str:
         """Returns an SQL representation of the field."""
-        return f'`{self.table.__namespace__}.{sql(self.field)}`'
+        return f'`{self.table.__namespace__}.{self.name}`'
 
 
 class OrderedField(NamedTuple):
