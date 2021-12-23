@@ -23,11 +23,15 @@ class ModelType(type):
 
         return None
 
-    def __sql__(cls, engine: Engine) -> Engine:
+    @property
+    def __table_identifier__(cls) -> TableIdentifier:
         if cls.__schema__ is None:
-            return engine.sql(TableIdentifier(cls.__table_name__))
+            return TableIdentifier(cls.__table_name__)
 
-        return engine.sql(TableIdentifier(cls.__schema__, cls.__table_name__))
+        return TableIdentifier(cls.__schema__, cls.__table_name__)
+
+    def __sql__(cls, engine: Engine) -> Engine:
+        return engine.sql(cls.__table_identifier__)
 
 
 class Model(metaclass=ModelType):
