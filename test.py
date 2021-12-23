@@ -16,7 +16,10 @@ def main():
 
     record = MyModel(3, 'Pee-Wee Herman')
     print('Record:', record)
-    query = select(MyModel).where(MyModel.id == 1)
+    print('Field:', MyModel.id, type(MyModel.id))
+    condition = MyModel.id == 1
+    print('Condition:', condition)
+    query = select(MyModel).where(condition)
     print('Query:', query.__sql__)
 
 
