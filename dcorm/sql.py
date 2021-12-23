@@ -12,10 +12,11 @@ __all__ = ['sql']
 def sql(obj: Any, *, alt: bool = False) -> str:
     """Reutrns an SQL representation of the given object."""
 
-    with suppress(AttributeError):
-        if alt:
+    if alt:
+        with suppress(AttributeError):
             return obj.__alt_sql__
 
+    with suppress(AttributeError):
         return obj.__sql__
 
     if isinstance(obj, str):
