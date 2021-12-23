@@ -4,6 +4,8 @@ from __future__ import annotations
 from dataclasses import MISSING, Field as _Field
 from typing import Any, NamedTuple
 
+from dcorm.expression import Expression
+from dcorm.expression_functions import expression_generator
 from dcorm.ordering import Ordering
 from dcorm.sql import sql
 
@@ -11,6 +13,7 @@ from dcorm.sql import sql
 __all__ = ['Field', 'OrderedField']
 
 
+@expression_generator(typ=Expression)
 class Field(NamedTuple):
     """Represents a field bound to a model."""
 
