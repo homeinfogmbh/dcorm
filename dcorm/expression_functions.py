@@ -251,6 +251,8 @@ def expression_generator(cls: Optional[type] = None, /, *,
         for method, function in METHODS.items():
             setattr(target, method, function(typ))
 
+        return target
+
     if cls is None:
         return inner
 
