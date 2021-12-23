@@ -9,7 +9,7 @@ from typing import Any
 from dcorm.containers import CONTAINERS
 
 
-__all__ = ['sql', 'SQL', 'Engine']
+__all__ = ['sql', 'SQL', 'Engine', 'TableIdentifier']
 
 
 def sql(obj: Any) -> str:   # pylint: disable=R0911
@@ -59,3 +59,10 @@ class Engine:   # pylint: disable=R0903
     def sql(self, obj: Any) -> SQL:
         """Returns an SQL object from any given object."""
         raise NotImplementedError()
+
+
+class TableIdentifier(list):
+    """A table identifier."""
+
+    def __init__(self, *path: str):
+        super().__init__(path)
