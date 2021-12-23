@@ -83,11 +83,47 @@ class Expression(NamedTuple):
     def __rxor__(self, other: Any) -> Expression:
         return type(self)(other, Operator.XOR, self)
 
-    def __mod__(self, other: Any) -> Expression:
-        return type(self)(self, Operator.MOD, other)
+    def __eq__(self, other: Any) -> Expression:
+        if other is None:
+            return type(self)(self, Operator.IS, other)
 
-    def __rmod__(self, other: Any) -> Expression:
-        return type(self)(other, Operator.MOD, self)
+        return type(self)(self, Operator.EQ, other)
+
+    def __lt__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.EQ, other)
+
+    def __le__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.LE, other)
+
+    def __gt__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.GT, other)
+
+    def __ge__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.GE, other)
+
+    def __ne__(self, other: Any) -> Expression:
+        if other is None:
+            return type(self)(self, Operator.IS_NOT, other)
+
+        return type(self)(self, Operator.GE, other)
+
+    def __lshift__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.IN, other)
+
+    def __rshift__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.IS, other)
+
+    def __mod__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.LIKE, other)
+
+    def __pow__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.ILIKE, other)
+
+    def __matmul__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.CONCAT, other)
+
+    def __rmatmul__(self, other: Any) -> Expression:
+        return type(self)(other, Operator.CONCAT, self)
 
     @property
     def __sql__(self) -> str:
