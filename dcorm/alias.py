@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from typing import Any, Iterable, Optional
 
+from dcorm.field import Field
 from dcorm import sql
 
 
@@ -18,7 +19,21 @@ class Alias:
 
     def __getattr__(self, attribute: str) -> Any:
         """Delegates to the underlying model."""
-        return getattr(self.model, attribute)
+        if isinstance(value := getattr(self.model, attribute), Field):
+            return Field(self, value.field, value.value)
+
+        if isinstance(value, type(self)):
+            value.model = self.model
+
+        return value
+
+    @property
+    def __alt_sql__(self) -> str:
+        """Returns an alternative SQL representation of the alias."""
+        if self.name is None:
+            raise RuntimeError('Alias name not set:', self)
+
+        return f'`{self.name}`'
 
     @property
     def __sql__(self) -> str:
@@ -26,7 +41,7 @@ class Alias:
         if self.name is None:
             raise RuntimeError('Alias name not set:', self)
 
-        return f'{sql(self.model)} AS `{self.name}`'
+        return f'{sql(self.model)} AS {sql(self, alt=True)}'
 
 
 class AliasManager:
