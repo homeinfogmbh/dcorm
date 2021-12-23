@@ -53,3 +53,8 @@ class Model(metaclass=ModelType):
             return self.__table_name__
 
         return f'{self.__schema__}.{self.__table_name__}'
+
+    @property
+    def __sql__(self) -> str:
+        """Returns an SQL string."""
+        return f'`{self.__namespace__}`'
