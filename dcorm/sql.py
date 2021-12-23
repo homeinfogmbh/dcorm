@@ -13,4 +13,10 @@ def sql(obj: Any) -> str:
     with suppress(AttributeError):
         return obj.__sql__
 
+    if isinstance(obj, bool):
+        return sql(int(obj))
+
+    if isinstance(obj, (int, float)):
+        return str(obj)
+
     raise TypeError(f'Cannot convert {type(obj)} to SQL.')
