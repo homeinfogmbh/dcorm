@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from typing import Any, Optional
 
+from dcorm.alias import Alias
 from dcorm.database import Database
 from dcorm.field import Field
 
@@ -48,6 +49,10 @@ class Model(metaclass=ModelType):
             value = field.type(value)
 
         super().__setattr__(attribute, value)
+
+    def alias(self, name: Optional[str] = None) -> Alias:
+        """Creates a model alias."""
+        return Alias(self, name)
 
     @property
     def __schema__(self) -> str:
