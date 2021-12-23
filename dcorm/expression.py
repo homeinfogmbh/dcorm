@@ -55,6 +55,42 @@ class Expression:
 
         return type(self)(other, Operator.OR, self)
 
+    def __add__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.ADD, other)
+
+    def __radd__(self, other: Any) -> Expression:
+        return type(self)(other, Operator.ADD, self)
+
+    def __sub__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.SUB, other)
+
+    def __rsub__(self, other: Any) -> Expression:
+        return type(self)(other, Operator.SUB, self)
+
+    def __mul__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.MUL, other)
+
+    def __rmul__(self, other: Any) -> Expression:
+        return type(self)(other, Operator.MUL, self)
+
+    def __div__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.DIV, other)
+
+    def __rdiv__(self, other: Any) -> Expression:
+        return type(self)(other, Operator.DIV, self)
+
+    def __xor__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.XOR, other)
+
+    def __rxor__(self, other: Any) -> Expression:
+        return type(self)(other, Operator.XOR, self)
+
+    def __mod__(self, other: Any) -> Expression:
+        return type(self)(self, Operator.MOD, other)
+
+    def __rmod__(self, other: Any) -> Expression:
+        return type(self)(other, Operator.MOD, self)
+
     @property
     def __sql__(self) -> str:
         """Returns an SQL representation of the expression."""
