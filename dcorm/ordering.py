@@ -2,6 +2,8 @@
 
 from enum import Enum
 
+from dcorm.literal import Literal
+
 
 __all__ = ['Ordering']
 
@@ -9,10 +11,5 @@ __all__ = ['Ordering']
 class Ordering(Enum):
     """Available orderings."""
 
-    ASC = 'ASC'
-    DESC = 'DESC'
-
-    @property
-    def __sql__(self) -> str:
-        """Returns an SQL representation of the ordering."""
-        return self.value
+    ASC = Literal('ASC', space_left=True)
+    DESC = Literal('DESC', space_left=True)
