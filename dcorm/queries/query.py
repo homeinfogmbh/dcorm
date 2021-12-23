@@ -1,8 +1,9 @@
 """Basic SQL queries."""
 
 from __future__ import annotations
-from typing import Union
+from typing import Any, Optional, Union
 
+from dcorm.database import Database
 from dcorm.expression import Expression
 from dcorm.operations import Operation
 
@@ -21,3 +22,7 @@ class Query:    # pylint: disable=R0903
         """Updates the where clause."""
         self._where &= expression
         return self
+
+    def execute(self, database: Optional[Database] = None) -> Any:
+        """Executes the query."""
+        raise NotImplementedError()
