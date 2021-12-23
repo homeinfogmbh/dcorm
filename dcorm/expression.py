@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from dcorm.operations import Operation
+from dcorm.operators import Operator
 from dcorm.sql import sql
 
 
@@ -15,7 +15,7 @@ class Expression:
     """Conditional expression for WHERE clauses."""
 
     lhs: Any
-    operator: Operation
+    operator: Operator
     rhs: Any
 
     @property

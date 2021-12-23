@@ -1,13 +1,13 @@
-"""Database operations."""
+"""Query operators."""
 
 from enum import Enum
 
 
-__all__ = ['Operation']
+__all__ = ['Operator']
 
 
-class Operation(Enum):
-    """Database operaions."""
+class Operator(Enum):
+    """Query operators."""
 
     AND = 'AND'
     OR = 'OR'
