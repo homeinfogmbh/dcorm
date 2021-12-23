@@ -1,6 +1,7 @@
 """SQL statement generation."""
 
 from contextlib import suppress
+from decimal import Decimal
 from typing import Any
 
 from dcorm.containers import CONTAINERS
@@ -21,7 +22,7 @@ def sql(obj: Any) -> str:
     if isinstance(obj, bool):
         return str(int(obj))
 
-    if isinstance(obj, (int, float)):
+    if isinstance(obj, (int, float, Decimal)):
         return str(obj)
 
     if isinstance(obj, CONTAINERS):
