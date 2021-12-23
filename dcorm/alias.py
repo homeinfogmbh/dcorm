@@ -1,6 +1,6 @@
 """Model aliases."""
 
-from typing import Any, NamedTuple
+from typing import Any, NamedTuple, Optional
 
 
 __all__ = ['Alias']
@@ -10,7 +10,7 @@ class Alias(NamedTuple):
     """A model alias."""
 
     model: Any
-    name: str
+    name: Optional[str] = None
 
     def __getattr__(self, attribute: str) -> Any:
         """Delegates to the underlying model."""
