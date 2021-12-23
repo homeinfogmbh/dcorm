@@ -4,6 +4,10 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 from dcorm.database import Database
+from dcorm.field import Field
+
+
+__all__ = ['ModelType', 'Model']
 
 
 class ModelType(type):
@@ -25,6 +29,11 @@ class Model(metaclass=ModelType):
             cls.__database__ = database
 
         cls.__table_name__ = table_name or cls.__name__.lower()
+
+        # pylint: disable-next=E1101
+        for attribute, field in cls.__dataclass_fields__.items():
+            setattr(cls, attribute, Field(cls, field))
+
         dataclass(cls)
 
     def __setattr__(self, attribute: str, value: Any) -> None:
