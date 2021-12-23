@@ -1,5 +1,6 @@
 """Functions to concatenate typs."""
 
+from contextlib import suppress
 from functools import partial
 from typing import Any, Callable, Optional, Union
 
@@ -13,6 +14,10 @@ def op_not(typ: type) -> Callable:
     """Generates and NOT operator method."""
 
     def inner(self) -> Union[typ, bool]:
+        with suppress(AttributeError):
+            if self.operator is Operator.NOT:
+                return self.lhs
+
         return typ(self, Operator.NOT)
 
     return inner
