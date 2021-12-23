@@ -1,8 +1,7 @@
 """Conditional expressions."""
 
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import Any, Optional, Union
+from typing import Any, NamedTuple, Optional, Union
 
 from dcorm.operators import Operator
 from dcorm.sql import sql
@@ -11,8 +10,7 @@ from dcorm.sql import sql
 __all__ = ['Expression']
 
 
-@dataclass
-class Expression:
+class Expression(NamedTuple):
     """Conditional expression for WHERE clauses."""
 
     lhs: Any
