@@ -26,7 +26,7 @@ class Model(metaclass=ModelType):
             table_name: Optional[str] = None
         ):
         """Initialize the model with meta data."""
-        super().__init_subclass__()
+        dataclass(cls)
 
         if database is not None:
             cls.__database__ = database
@@ -36,8 +36,6 @@ class Model(metaclass=ModelType):
         # pylint: disable-next=E1101
         for attribute, field in cls.__dataclass_fields__.items():
             setattr(cls, attribute, Field(cls, field))
-
-        dataclass(cls)
 
     def __setattr__(self, attribute: str, value: Any) -> None:
         """Hook to set special field values."""
