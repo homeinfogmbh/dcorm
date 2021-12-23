@@ -14,6 +14,27 @@ __all__ = ['ModelType', 'Model']
 class ModelType(type):
     """Metaclass for models."""
 
+    @property
+    def __schema__(cls) -> str:
+        """Returns the database schema."""
+        if (database :=  cls.__database__) is not None:
+            return database
+
+        return None
+
+    @property
+    def __namespace__(cls) -> str:
+        """Returns the namespace path of the table."""
+        if cls.__schema__ is None:
+            return cls.__table_name__
+
+        return f'{cls.__schema__}.{cls.__table_name__}'
+
+    @property
+    def __sql__(cls) -> str:
+        """Returns an SQL string."""
+        return f'`{cls.__namespace__}`'
+
 
 class Model(metaclass=ModelType):
     """Model base class to inherit actual dataclass models from."""
@@ -52,24 +73,3 @@ class Model(metaclass=ModelType):
     def alias(cls, name: Optional[str] = None) -> Alias:
         """Creates a model alias."""
         return Alias(cls, name)
-
-    @property
-    def __schema__(self) -> str:
-        """Returns the database schema."""
-        if (database :=  self.__database__) is not None:
-            return database
-
-        return None
-
-    @property
-    def __namespace__(self) -> str:
-        """Returns the namespace path of the table."""
-        if self.__schema__ is None:
-            return self.__table_name__
-
-        return f'{self.__schema__}.{self.__table_name__}'
-
-    @property
-    def __sql__(self) -> str:
-        """Returns an SQL string."""
-        return f'`{self.__namespace__}`'
