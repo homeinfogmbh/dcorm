@@ -9,10 +9,13 @@ from dcorm.containers import CONTAINERS
 __all__ = ['sql']
 
 
-def sql(obj: Any) -> str:
+def sql(obj: Any, *, alt: bool = False) -> str:
     """Reutrns an SQL representation of the given object."""
 
     with suppress(AttributeError):
+        if alt:
+            return obj.__alt_sql__
+
         return obj.__sql__
 
     if isinstance(obj, str):
