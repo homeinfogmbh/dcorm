@@ -39,5 +39,5 @@ class Operator(Enum):
 
     @property
     def __sql__(self) -> str:
-        """Returns the SQL representation of the operation."""
+        """Returns the SQL representation of the operator."""
         return self.value
