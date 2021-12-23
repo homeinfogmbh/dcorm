@@ -33,20 +33,12 @@ class Alias:
         return self.name
 
     @property
-    def __alt_sql__(self) -> str:
-        """Returns an alternative SQL representation of the alias."""
-        if self.name is None:
-            raise RuntimeError('Alias name not set:', self)
-
-        return f'`{self.name}`'
-
-    @property
     def __sql__(self) -> str:
         """Returns an SQL representation of the alias."""
         if self.name is None:
             raise RuntimeError('Alias name not set:', self)
 
-        return f'{sql(self.model)} AS {sql(self, alt=True)}'
+        return f'{sql(self.model)} AS `{self.name}`'
 
 
 class AliasManager:
