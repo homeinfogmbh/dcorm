@@ -5,6 +5,7 @@ from itertools import chain
 from typing import Iterator, Optional, Union
 from warnings import warn
 
+from dcorm.alias import Alias, AliasManager
 from dcorm.field import Field, OrderedField
 from dcorm.inspection import fields
 from dcorm.model import Model
@@ -15,7 +16,7 @@ from dcorm.queries.query import Query
 __all__ = ['select']
 
 
-SelectItem = Union[Model, Field]
+SelectItem = Union[Alias, Model, Field]
 
 
 def extract_fields(item: SelectItem) -> Iterator[Field]:
@@ -25,7 +26,7 @@ def extract_fields(item: SelectItem) -> Iterator[Field]:
         yield item
         return
 
-    if isinstance(item, Model):
+    if isinstance(item, (Alias, Model)):
         yield from fields(item)
         return
 
@@ -42,6 +43,7 @@ class SelectQuery(Query):
         self._order_by: list[OrderedField] = []
         self._limit: Optional[int] = None
         self._offset: []
+        self._alias_manager: AliasManager = AliasManager()
 
     def order_by(self, *items: Union[Field, OrderedField]) -> SelectQuery:
         """Updates the order-by clause."""
