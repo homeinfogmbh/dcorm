@@ -1,23 +1,13 @@
 """Dataclass inspection."""
 
-from dataclasses import Field as _Field
-from typing import Any, Iterator, NamedTuple, Union
+from dataclasses import MISSING
+from typing import Iterator, Union
 
+from dcorm.field import Field
 from dcorm.model import Model, ModelType
 
 
-__all__ = ['NOT_SET', 'fields']
-
-
-NOT_SET = object()
-
-
-class Field(NamedTuple):
-    """Represents a field bound to a model."""
-
-    model: Model
-    field: _Field
-    value: Any = NOT_SET
+__all__ = ['fields']
 
 
 def model_fields(model: ModelType) -> Iterator[Field]:
@@ -31,7 +21,7 @@ def record_fields(record: Model) -> Iterator[Field]:
     """Yields fields from a record."""
 
     for attribute, field in record.__dataclass_fields__.items():
-        yield Field(type(record), field, getattr(record, attribute, NOT_SET))
+        yield Field(type(record), field, getattr(record, attribute, MISSING))
 
 
 def fields(obj: Union[ModelType, Model]) -> Iterator[Field]:
