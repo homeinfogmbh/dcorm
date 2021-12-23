@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any, Iterable, Optional
 
 from dcorm.field import Field
-from dcorm import sql
+from dcorm.sql import sql
 
 
 __all__ = ['Alias', 'AliasManager']
