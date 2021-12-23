@@ -19,9 +19,11 @@ class Model(metaclass=ModelType):
 
     __database__ = None
 
-    def __init_subclass__(cls, *,
-                          database: Optional[Database] = None,
-                          table_name: Optional[str] = None):
+    def __init_subclass__(
+            cls, *,
+            database: Optional[Database] = None,
+            table_name: Optional[str] = None
+        ):
         """Initialize the model with meta data."""
         super().__init_subclass__()
 
