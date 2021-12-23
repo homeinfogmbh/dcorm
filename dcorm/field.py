@@ -1,17 +1,14 @@
 """Field accessors."""
 
 from __future__ import annotations
-from dataclasses import Field as _Field
+from dataclasses import MISSING, Field as _Field
 from typing import Any, NamedTuple
 
 from dcorm.ordering import Ordering
 from dcorm.sql import sql
 
 
-__all__ = ['NOT_SET', 'Field']
-
-
-NOT_SET = object()
+__all__ = ['Field']
 
 
 class Field(NamedTuple):
@@ -19,7 +16,7 @@ class Field(NamedTuple):
 
     table: Any
     field: _Field
-    value: Any = NOT_SET
+    value: Any = MISSING
 
     def asc(self) -> OrderedField:
         """Returns an ordered field with ascending ordering."""
