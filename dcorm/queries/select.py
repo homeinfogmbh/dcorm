@@ -12,7 +12,7 @@ from dcorm.operations import Operation
 from dcorm.queries.query import Query
 
 
-__all__ = ['Query']
+__all__ = ['select']
 
 
 SelectItem = Union[Model, Field]
@@ -67,3 +67,9 @@ class SelectQuery(Query):
             warn(f'Overriding previous offset of {previous}')
 
         self._offset = offset
+
+
+def select(*items: SelectItem) -> SelectQuery:
+    """Creates a select quers."""
+
+    return SelectQuery(*items)
