@@ -16,6 +16,10 @@ def make_field(*args, **kwargs) -> Field:
         key: value for key, value in kwargs.items()
         if key not in _field.__code__.co_varnames
     }
+    kwargs = {
+        key: value for key, value in kwargs.items()
+        if key in _field.__code__.co_varnames
+    }
     metadata.update(metadata_override)
     return _field(*args, metadata=metadata, **kwargs)
 
