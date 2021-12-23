@@ -1,0 +1,43 @@
+"""Database operations."""
+
+from enum import Enum
+
+
+__all__ = ['Operation']
+
+
+class Operation(Enum):
+    """Database operaions."""
+
+    AND = 'AND'
+    OR = 'OR'
+    ADD = '+'
+    SUB = '-'
+    MUL = '*'
+    DIV = '/'
+    BIN_AND = '&'
+    BIN_OR = '|'
+    XOR = '#'
+    MOD = '%'
+    EQ = ' = '
+    LT = '<'
+    LTE = '< = '
+    GT = '>'
+    GTE = '> = '
+    NE = '! = '
+    IN = 'IN'
+    NOT_IN = 'NOT IN'
+    IS = 'IS'
+    IS_NOT = 'IS NOT'
+    LIKE = 'LIKE'
+    ILIKE = 'ILIKE'
+    BETWEEN = 'BETWEEN'
+    REGEXP = 'REGEXP'
+    IREGEXP = 'IREGEXP'
+    CONCAT = '||'
+    BITWISE_NEGATION = '~'
+
+    @property
+    def __sql__(self) -> str:
+        """Returns the SQL representation of the operation."""
+        return self.value
