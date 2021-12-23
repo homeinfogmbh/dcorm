@@ -1,6 +1,7 @@
 """SQL statement generation."""
 
 from contextlib import suppress
+from datetime import date, datetime, time
 from decimal import Decimal
 from typing import Any
 
@@ -10,8 +11,11 @@ from dcorm.containers import CONTAINERS
 __all__ = ['sql']
 
 
-def sql(obj: Any) -> str:
+def sql(obj: Any) -> str:   # pylint: disable=R0911
     """Reutrns an SQL representation of the given object."""
+
+    if obj is None:
+        return 'NULL'
 
     with suppress(AttributeError):
         return obj.__sql__
@@ -21,6 +25,15 @@ def sql(obj: Any) -> str:
 
     if isinstance(obj, bool):
         return str(int(obj))
+
+    if isinstance(obj, bytes):
+        try:
+            return obj.decode('utf8')
+        except UnicodeDecodeError:
+            return obj.decode('raw_unicode_escape')
+
+    if isinstance(obj, (date, datetime, time)):
+        return obj.isoformat()
 
     if isinstance(obj, (int, float, Decimal)):
         return str(obj)
