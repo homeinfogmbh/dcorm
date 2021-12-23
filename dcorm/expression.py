@@ -23,6 +23,6 @@ class Expression(NamedTuple):
     def __sql__(self) -> str:
         """Returns an SQL representation of the expression."""
         if self.rhs is None:    # Compensate for unary operators.
-            return f'({sql(self.operator)} {sql(self.lhs)})'
+            return f'{sql(self.operator)} {sql(self.lhs)}'
 
         return f'({sql(self.lhs)} {sql(self.operator)} {sql(self.rhs)})'
