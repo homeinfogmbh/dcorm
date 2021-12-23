@@ -1,8 +1,34 @@
 """A daclasses-based ORM framework for relational databases."""
 
 from dcorm.database import Database
+from dcorm.expression import Expression
+from dcorm.field import Field, OrderedField
+from dcorm.field_types import FieldType
 from dcorm.fields import field
+from dcorm.inspection import fields
+from dcorm.joins import Join
 from dcorm.model import ModelType, Model
+from dcorm.operations import Operation
+from dcorm.operators import Operator
+from dcorm.ordering import Ordering
+from dcorm.queries import select
+from dcorm.sql import sql
 
 
-__all__ = ['field', 'Database', 'Model', 'ModelType']
+__all__ = [
+    'field',
+    'fields',
+    'select',
+    'sql',
+    'Database',
+    'Expression',
+    'Field',
+    'FieldType',
+    'Join',
+    'Model',
+    'ModelType',
+    'Operation',
+    'Operator',
+    'OrderedField',
+    'Ordering'
+]
