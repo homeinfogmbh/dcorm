@@ -31,8 +31,8 @@ class Model(metaclass=ModelType):
         """Hook to set special field values."""
         field = self.__dataclass_fields__[attribute]    # pylint: disable=E1101
 
-        if (coerce := field.metadata.get('coerce')):
-            value = coerce(value)
+        if (converter := field.metadata.get('converter')):
+            value = converter(value)
         elif not isinstance(value, field.type):
             value = field.type(value)
 
