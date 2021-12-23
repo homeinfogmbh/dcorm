@@ -1,12 +1,16 @@
 """Model aliases."""
 
-from typing import Any, Iterable, NamedTuple, Optional
+from dataclasses import dataclass
+from typing import Any, Iterable, Optional
+
+from dcorm import sql
 
 
 __all__ = ['Alias', 'AliasManager']
 
 
-class Alias(NamedTuple):
+@dataclass
+class Alias:
     """A model alias."""
 
     model: Any
@@ -19,7 +23,10 @@ class Alias(NamedTuple):
     @property
     def __sql__(self) -> str:
         """Returns an SQL representation of the alias."""
-        return self.name
+        if self.name is None:
+            raise RuntimeError('Alias name not set:', self)
+
+        return f'{sql(self.model)} AS `{self.name}`'
 
 
 class AliasManager:
@@ -35,19 +42,20 @@ class AliasManager:
     def __exit__(self, typ, value, traceback):
         self.aliases.clear()
 
-    def get_unique_alias(self) -> str:
+    def get_unique_alias(self, alias: Alias) -> str:
         """Generates a unique alias."""
         counter = 1
 
         while (name := f't{counter}') in self.aliases:
             counter += 1
 
+        alias.name = name
         return name
 
     def get_alias_name(self, alias: Alias) -> str:
         """Returns an alias name."""
         if alias.name is None:
-            return self.get_unique_alias()
+            return self.get_unique_alias(alias)
 
         return alias.name
 
