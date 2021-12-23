@@ -6,7 +6,7 @@ from dcorm.field import Field, OrderedField
 from dcorm.field_types import FieldType
 from dcorm.fields import field
 from dcorm.inspection import fields
-from dcorm.joins import Join
+from dcorm.joins import Join, JoinType
 from dcorm.model import ModelType, Model
 from dcorm.operations import Operation
 from dcorm.operators import Operator
@@ -25,6 +25,7 @@ __all__ = [
     'Field',
     'FieldType',
     'Join',
+    'JoinType',
     'Model',
     'ModelType',
     'Operation',
