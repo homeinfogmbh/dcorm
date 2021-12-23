@@ -28,6 +28,11 @@ class Alias:
         return value
 
     @property
+    def __namespace__(self) -> str:
+        """Returns the alias name."""
+        return self.name
+
+    @property
     def __alt_sql__(self) -> str:
         """Returns an alternative SQL representation of the alias."""
         if self.name is None:
