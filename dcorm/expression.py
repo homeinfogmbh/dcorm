@@ -21,4 +21,4 @@ class Expression:
     @property
     def __sql__(self) -> str:
         """Returns an SQL representation of the expression."""
-        return f'{sql(self.lhs)} {self.operator.__sql__} {sql(self.rhs)}'
+        return f'({sql(self.lhs)} {self.operator.__sql__} {sql(self.rhs)})'
