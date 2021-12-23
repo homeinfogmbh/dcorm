@@ -8,7 +8,7 @@ from dcorm.ordering import Ordering
 from dcorm.sql import sql
 
 
-__all__ = ['Field']
+__all__ = ['Field', 'OrderedField']
 
 
 class Field(NamedTuple):
