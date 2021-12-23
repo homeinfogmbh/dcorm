@@ -9,6 +9,15 @@ from dcorm.operators import Operator
 __all__ = ['expression_generator']
 
 
+def op_not(typ: type) -> Callable:
+    """Generates and NOT operator method."""
+
+    def inner(self) -> Union[typ, bool]:
+        return typ(self, Operator.NOT)
+
+    return inner
+
+
 def op_and(typ: type, *, inverse: bool = False) -> Callable:
     """Generates and AND operator method."""
 
@@ -214,6 +223,7 @@ def op_concat(typ: type, *, inverse: bool = False) -> Callable:
 
 
 METHODS = {
+    '__invert__': op_not,
     '__and__': op_and,
     '__rand__': partial(op_and, inverse=True),
     '__or__': op_or,

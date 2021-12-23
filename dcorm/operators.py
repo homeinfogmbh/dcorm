@@ -9,6 +9,7 @@ __all__ = ['Operator']
 class Operator(Enum):
     """Query operators."""
 
+    NOT = 'NOT'
     AND = 'AND'
     OR = 'OR'
     ADD = '+'
