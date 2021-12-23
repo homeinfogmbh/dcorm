@@ -1,11 +1,11 @@
 """Select queries."""
 
 from __future__ import annotations
-from itertools import chain
 from typing import Iterator, Optional, Union
 from warnings import warn
 
 from dcorm.alias import Alias, AliasManager
+from dcorm.database import Database
 from dcorm.field import Field, OrderedField
 from dcorm.inspection import fields
 from dcorm.model import Model
@@ -39,11 +39,21 @@ class SelectQuery(Query):
     def __init__(self, *items: SelectItem):
         """Returns a selection proxy object."""
         super().__init__(Operation.SELECT)
-        self._select = list(chain(extract_fields(item) for item in items))
+        self._items = items
         self._order_by: list[OrderedField] = []
         self._limit: Optional[int] = None
-        self._offset: []
-        self._alias_manager: AliasManager = AliasManager()
+        self._offset: Optional[int] = None
+
+    @property
+    def _fields(self) -> Iterator[Field]:
+        """Filters out the selected fields."""
+        for item in self._items:
+            yield from extract_fields(item)
+
+    @property
+    def _aliases(self) -> Iterator[Alias]:
+        """Filters out the used aliases."""
+        return filter(lambda item: isinstance(item, Alias), self._items)
 
     def order_by(self, *items: Union[Field, OrderedField]) -> SelectQuery:
         """Updates the order-by clause."""
@@ -69,6 +79,12 @@ class SelectQuery(Query):
             warn(f'Overriding previous offset of {previous}')
 
         self._offset = offset
+
+    def execute(self, database: Optional[Database] = None):
+        """Executes the query."""
+        with AliasManager() as manager:
+            manager.register_aliases(self._aliases)
+            return super().execute(database=database)
 
 
 def select(*items: SelectItem) -> SelectQuery:
