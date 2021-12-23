@@ -26,6 +26,11 @@ class Field(NamedTuple):
         """Returns an ordered field with descending ordering."""
         return OrderedField(self, Ordering.DESC)
 
+    @property
+    def __sql__(self) -> str:
+        """Returns an SQL representation of the field."""
+        return f'`{self.table.__namespace__}.{sql(self.field)}`'
+
 
 class OrderedField(NamedTuple):
     """Represents a field with an ordering."""
