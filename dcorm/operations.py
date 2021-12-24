@@ -2,6 +2,8 @@
 
 from enum import Enum
 
+from dcorm.literal import unary
+
 
 __all__ = ['Operation']
 
@@ -9,13 +11,8 @@ __all__ = ['Operation']
 class Operation(Enum):
     """Available databse operations."""
 
-    CREATE = 'CREATE'
-    DELETE = 'DELETE'
-    INSERT = 'INSERT'
-    SELECT = 'SELECT'
-    UPDATE = 'UPDATE'
-
-    @property
-    def __sql__(self) -> str:
-        """Returns an SQL representation of the operation."""
-        return self.value
+    CREATE = unary('CREATE')
+    DELETE = unary('DELETE')
+    INSERT = unary('INSERT')
+    SELECT = unary('SELECT')
+    UPDATE = unary('UPDATE')
