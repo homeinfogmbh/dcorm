@@ -47,7 +47,6 @@ class Engine:   # pylint: disable=R0902
         else:
             raise TypeError(f'Cannot serialize value: {type(value)}')
 
-        print(self._sql, self._values)
         return self
 
     def sql(self, obj: Any) -> Engine:
