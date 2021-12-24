@@ -47,13 +47,15 @@ class Engine:   # pylint: disable=R0902
 
     def add_table_identifier(self, ident: TableIdentifier) -> Engine:
         """Adds a table identifier."""
-        self._sql.append('.'.join(['%s'] * len(ident)))
+        template = '.'.join(['%s'] * len(ident))
+        self._sql.append(f' {template} ')
         self._values.extend(ident)
         return self
 
     def add_field_identifier(self, ident: FieldIdentifier) -> Engine:
         """Adds a field identifier."""
-        self._sql.append('.'.join(['%s'] * len(ident)))
+        template = '.'.join(['%s'] * len(ident))
+        self._sql.append(f' {template} ')
         self._values.extend(ident)
         return self
 
@@ -68,7 +70,9 @@ class Engine:   # pylint: disable=R0902
         if isinstance(obj, FieldIdentifier):
             return self.add_field_identifier(obj)
 
-        raise TypeError(f'Invalid SQL node: {type(obj)}')
+        return self.value(obj)
+
+        #raise TypeError(f'Invalid SQL node: {type(obj)}')
 
     def literal(self, obj: Union[Enum, Literal]) -> Engine:
         """Processes a literal."""
