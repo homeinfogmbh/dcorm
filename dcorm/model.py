@@ -59,14 +59,18 @@ class Model(metaclass=ModelType):
 
     def __setattr__(self, attribute: str, value: Any) -> None:
         """Hook to set special field values."""
-        field = self.__dataclass_fields__[attribute]    # pylint: disable=E1101
+        try:
+            # pylint: disable-next=E1101
+            field = self.__dataclass_fields__[attribute]
+        except KeyError:    # Not a field.
+            return super().__setattr__(attribute, value)
 
         if (converter := field.metadata.get('converter')):
             value = converter(value)
         elif not isinstance(value, field.type):
             value = field.type(value)
 
-        super().__setattr__(attribute, value)
+        return super().__setattr__(attribute, value)
 
     @classmethod
     def alias(cls, name: Optional[str] = None) -> Alias:
