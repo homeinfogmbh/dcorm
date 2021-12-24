@@ -8,20 +8,22 @@ from dcorm.alias import Alias, AliasManager
 from dcorm.database import Database
 from dcorm.engine import Engine
 from dcorm.expression import Expression
-from dcorm.field import Field, OrderedField
+from dcorm.field import Field, FieldSelect, OrderedField
 from dcorm.inspection import fields
 from dcorm.joins import Join, JoinType
+from dcorm.literal import binary
 from dcorm.model import ModelType
 from dcorm.operations import Operation
 from dcorm.queries.query import Query
 from dcorm.relations import find_relation
-from dcorm.sql import sql
 
 
 __all__ = ['select']
 
 
 SelectItem = Union[Alias, ModelType, Field]
+FROM = binary('FROM')
+WHERE = binary('WHERE')
 
 
 def extract_fields(item: SelectItem) -> Iterator[Field]:
@@ -57,11 +59,9 @@ class SelectQuery(Query):
         self._alias_manager: AliasManager = AliasManager()
 
     def __sql__(self, engine: Engine) -> Engine:
-        fields_ = ', '.join(sql(field, engine) for field in self._fields)
-        from_ = sql(self._from, engine)
-        where = sql(self._where, engine)
-        return engine.literal(self._operation).sql(fields_).sql(from_).sql(
-            where)
+        return engine.literal(self._operation).sql(
+            FieldSelect(*self._fields)).literal(FROM).sql(self._from).literal(
+            WHERE).sql(self._where)
 
     @property
     def _fields(self) -> Iterator[Field]:
