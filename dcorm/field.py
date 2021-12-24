@@ -40,7 +40,7 @@ class Field(NamedTuple):
         return self.table.__table_identifier__.field(self.name)
 
     def __sql__(self, engine: Engine) -> Engine:
-        return engine(self.identifier)
+        return engine.sql(self.identifier)
 
 
 class OrderedField(NamedTuple):
