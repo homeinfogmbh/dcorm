@@ -12,14 +12,12 @@ from dcorm.operations import Operation
 from dcorm.operators import Operator
 from dcorm.ordering import Ordering
 from dcorm.queries import select
-from dcorm.sql import sql
 
 
 __all__ = [
     'field',
     'fields',
     'select',
-    'sql',
     'Database',
     'Expression',
     'Field',
