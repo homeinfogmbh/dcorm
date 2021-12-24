@@ -36,14 +36,6 @@ class Engine:   # pylint: disable=R0902
         """Quotes the given string."""
         return self.quotes.format(string)
 
-    def conflict_statement(self, on_conflict, query):
-        """Handle statement conflicts."""
-        raise NotImplementedError()
-
-    def conflict_update(self, on_conflict, query):
-        """Handle update conflicts."""
-        raise NotImplementedError()
-
     def value(self, value: Any) -> Engine:
         """Set a value."""
         if isinstance(value, (bool, float, int)):
