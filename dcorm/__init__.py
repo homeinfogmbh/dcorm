@@ -2,10 +2,10 @@
 
 from dcorm.database import Database
 from dcorm.expression import Expression
-from dcorm.field import Field, OrderedField
+from dcorm.column import Column, OrderedColumn
 from dcorm.field_types import FieldType
 from dcorm.fields import field
-from dcorm.inspection import fields
+from dcorm.inspection import columns
 from dcorm.joins import Join, JoinType
 from dcorm.model import ModelType, Model
 from dcorm.operations import Operation
@@ -15,12 +15,12 @@ from dcorm.queries import select
 
 
 __all__ = [
+    'columns',
     'field',
-    'fields',
     'select',
+    'Column',
     'Database',
     'Expression',
-    'Field',
     'FieldType',
     'Join',
     'JoinType',
@@ -28,6 +28,6 @@ __all__ = [
     'ModelType',
     'Operation',
     'Operator',
-    'OrderedField',
+    'OrderedColumn',
     'Ordering'
 ]

@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from typing import Any, Optional
 
 from dcorm.alias import Alias
+from dcorm.column import Column
 from dcorm.database import Database
 from dcorm.engine import Engine
-from dcorm.field import Field
 from dcorm.path import Path
 
 
@@ -55,7 +55,7 @@ class Model(metaclass=ModelType):
 
         # pylint: disable-next=E1101
         for attribute, field in cls.__dataclass_fields__.items():
-            setattr(cls, attribute, Field(cls, field))
+            setattr(cls, attribute, Column(cls, field))
 
     def __setattr__(self, attribute: str, value: Any) -> None:
         """Hook to set special field values."""

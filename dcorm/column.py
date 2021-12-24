@@ -12,7 +12,7 @@ from dcorm.ordering import Ordering
 from dcorm.path import Path
 
 
-__all__ = ['NOT_SET', 'Field', 'FieldSelect', 'OrderedField']
+__all__ = ['NOT_SET', 'Column', 'ColumnSelect', 'OrderedColumn']
 
 
 COMMA = unary(',')
@@ -20,29 +20,29 @@ NOT_SET = object()
 
 
 @dataclass(eq=False)
-class Field(ExpressionBase, typ=Expression):
-    """Represents a field bound to a model."""
+class Column(ExpressionBase, typ=Expression):
+    """Represents a column bound to a model."""
 
     table: Any
     field: _Field
     value: Any = NOT_SET
 
-    def asc(self) -> OrderedField:
-        """Returns an ordered field with ascending ordering."""
-        return OrderedField(self, Ordering.ASC)
+    def asc(self) -> OrderedColumn:
+        """Returns an ordered column with ascending ordering."""
+        return OrderedColumn(self, Ordering.ASC)
 
-    def desc(self) -> OrderedField:
-        """Returns an ordered field with descending ordering."""
-        return OrderedField(self, Ordering.DESC)
+    def desc(self) -> OrderedColumn:
+        """Returns an ordered column with descending ordering."""
+        return OrderedColumn(self, Ordering.DESC)
 
     @property
     def name(self) -> str:
-        """Returns the field name."""
+        """Returns the column's name."""
         return self.field.metadata.get('column_name', self.field.name)
 
     @property
     def path(self) -> Path:
-        """Returns the field identifier."""
+        """Returns the column's path."""
         path = self.table.__table_path__
         path.append(self.name)
         return path
@@ -51,15 +51,15 @@ class Field(ExpressionBase, typ=Expression):
         return engine.sql(self.path)
 
 
-class FieldSelect(list):
+class ColumnSelect(list):
     """A fields list."""
 
-    def __init__(self, *fields: Field):
-        super().__init__(fields)
+    def __init__(self, *columns: Column):
+        super().__init__(columns)
 
     def __sql__(self, engine: Engine) -> Engine:
-        for index, field in enumerate(self, start=1):
-            engine.sql(field)
+        for index, column in enumerate(self, start=1):
+            engine.sql(column)
 
             if index < len(self):
                 engine.literal(COMMA)
@@ -67,10 +67,10 @@ class FieldSelect(list):
         return engine
 
 
-class OrderedField(NamedTuple):
-    """Represents a field with an ordering."""
+class OrderedColumn(NamedTuple):
+    """Represents a table column with ordering."""
 
-    field: Field
+    field: Column
     ordering: Ordering
 
     def __sql__(self, engine: Engine) -> Engine:

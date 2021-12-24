@@ -5,11 +5,11 @@ from typing import Iterator, Optional, Union
 from warnings import warn
 
 from dcorm.alias import Alias, AliasManager
+from dcorm.column import Column, ColumnSelect, OrderedColumn
 from dcorm.database import Database
 from dcorm.engine import Engine
 from dcorm.expression import Expression
-from dcorm.field import Field, FieldSelect, OrderedField
-from dcorm.inspection import fields
+from dcorm.inspection import columns
 from dcorm.joins import Join, JoinType
 from dcorm.literal import binary
 from dcorm.model import ModelType
@@ -21,23 +21,23 @@ from dcorm.relations import find_relation
 __all__ = ['select']
 
 
-SelectItem = Union[Alias, ModelType, Field]
+SelectItem = Union[Alias, ModelType, Column]
 FROM = binary('FROM')
 WHERE = binary('WHERE')
 
 
-def extract_fields(item: SelectItem) -> Iterator[Field]:
-    """Adds an item to the selections."""
+def extract_columns(item: SelectItem) -> Iterator[Column]:
+    """Extract columns from the given item."""
 
-    if isinstance(item, Field):
+    if isinstance(item, Column):
         yield item
         return
 
     if isinstance(item, (Alias, ModelType)):
-        yield from fields(item)
+        yield from columns(item)
         return
 
-    raise TypeError(f'Cannot select {type(item)},')
+    raise TypeError(f'Cannot extract columns from {type(item)}.')
 
 
 class SelectQuery(Query):
@@ -48,26 +48,26 @@ class SelectQuery(Query):
         super().__init__(Operation.SELECT)
         self._items = [first, *other]
 
-        if isinstance(first, Field):
+        if isinstance(first, Column):
             self._from = first.table
         else:
             self._from = first
 
-        self._order_by: list[OrderedField] = []
+        self._order_by: list[OrderedColumn] = []
         self._limit: Optional[int] = None
         self._offset: Optional[int] = None
         self._alias_manager: AliasManager = AliasManager()
 
     def __sql__(self, engine: Engine) -> Engine:
         return engine.literal(self._operation).sql(
-            FieldSelect(*self._fields)).literal(FROM).sql(self._from).literal(
-            WHERE).sql(self._where)
+            ColumnSelect(*self._columns)).literal(FROM).sql(
+            self._from).literal(WHERE).sql(self._where)
 
     @property
-    def _fields(self) -> Iterator[Field]:
+    def _columns(self) -> Iterator[Column]:
         """Filters out the selected fields."""
         for item in self._items:
-            yield from extract_fields(item)
+            yield from extract_columns(item)
 
     @property
     def _aliases(self) -> Iterator[Alias]:
@@ -85,13 +85,13 @@ class SelectQuery(Query):
         self._from = Join(self._from, typ, other, on)
         return self
 
-    def order_by(self, *items: Union[Field, OrderedField]) -> SelectQuery:
+    def order_by(self, *items: Union[Column, OrderedColumn]) -> SelectQuery:
         """Updates the order-by clause."""
         if ordering := self._order_by:
             warn(f'Overriding previous ordering of {ordering}')
 
         self._order_by = [
-            item.asc() if isinstance(item, Field) else item
+            item.asc() if isinstance(item, Column) else item
             for item in items
         ]
         return self

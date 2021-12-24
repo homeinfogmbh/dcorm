@@ -3,8 +3,8 @@
 from dataclasses import dataclass
 from typing import Any, Iterable, Optional
 
+from dcorm.column import Column
 from dcorm.engine import Engine
-from dcorm.field import Field
 from dcorm.literal import binary
 
 
@@ -23,8 +23,8 @@ class Alias:
 
     def __getattr__(self, attribute: str) -> Any:
         """Delegates to the underlying model."""
-        if isinstance(value := getattr(self.model, attribute), Field):
-            return Field(self, value.field, value.value)
+        if isinstance(value := getattr(self.model, attribute), Column):
+            return Column(self, value.field, value.value)
 
         if isinstance(value, type(self)):
             value.model = self.model
