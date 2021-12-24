@@ -43,19 +43,26 @@ class Engine:   # pylint: disable=R0902
 
     def value(self, value: Any) -> Engine:
         """Set a value."""
-        raise NotImplementedError()
+        if isinstance(value, (bool, float, int)):
+            self._sql.append('%s')
+            self._values.append(value)
+
+        if isinstance(value, str):
+            self._sql.append("'%s'")
+            self._values.append(value)
+
+        raise TypeError(f'Cannot serialize value: {type(value)}')
+
 
     def add_table_identifier(self, ident: TableIdentifier) -> Engine:
         """Adds a table identifier."""
-        template = '.'.join(['%s'] * len(ident))
-        self._sql.append(f' {template} ')
+        self._sql.append('.'.join(['%s'] * len(ident)))
         self._values.extend(ident)
         return self
 
     def add_field_identifier(self, ident: FieldIdentifier) -> Engine:
         """Adds a field identifier."""
-        template = '.'.join(['%s'] * len(ident))
-        self._sql.append(f' {template} ')
+        self._sql.append('.'.join(['%s'] * len(ident)))
         self._values.extend(ident)
         return self
 
