@@ -1,7 +1,7 @@
 """SQL engine configuration."""
 
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Optional, Union
 
@@ -19,8 +19,8 @@ __all__ = ['Engine']
 class Engine:   # pylint: disable=R0902
     """An SQL engine."""
 
-    field_types: dict[str, FieldType]
-    operators: dict[Operator, Operator]
+    field_types: dict[str, FieldType] = field(default_factory=dict)
+    operators: dict[Operator, Operator] = field(default_factory=dict)
     param: str = '?'
     quote: str = '""'
     csq_parens: CSQParens = CSQParens.NEVER
