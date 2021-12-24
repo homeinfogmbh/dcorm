@@ -57,9 +57,9 @@ class SelectQuery(Query):
         self._alias_manager: AliasManager = AliasManager()
 
     def __sql__(self, engine: Engine) -> Engine:
-        fields_ = ', '.join(sql(field) for field in self._fields)
-        from_ = sql(self._from)
-        where = sql(self._where)
+        fields_ = ', '.join(sql(field, engine) for field in self._fields)
+        from_ = sql(self._from, engine)
+        where = sql(self._where, engine)
         return engine.literal(self._operation).sql(fields_).sql(from_).sql(
             where)
 
