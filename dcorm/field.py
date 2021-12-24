@@ -7,13 +7,15 @@ from typing import Any, NamedTuple
 from dcorm.engine import Engine
 from dcorm.expression import Expression
 from dcorm.expression_base import ExpressionBase
+from dcorm.literal import unary
 from dcorm.nodes import FieldIdentifier
 from dcorm.ordering import Ordering
 
 
-__all__ = ['NOT_SET', 'Field', 'OrderedField']
+__all__ = ['NOT_SET', 'Field', 'FieldSelect', 'OrderedField']
 
 
+COMMA = unary(',')
 NOT_SET = object()
 
 
@@ -45,6 +47,22 @@ class Field(ExpressionBase, typ=Expression):
 
     def __sql__(self, engine: Engine) -> Engine:
         return engine.sql(self.identifier)
+
+
+class FieldSelect(list):
+    """A fields list."""
+
+    def __init__(self, *fields: Field):
+        super().__init__(fields)
+
+    def __sql__(self, engine: Engine) -> Engine:
+        for index, field in enumerate(self):
+            engine.sql(field)
+
+            if index < len(self):
+                engine.literal(COMMA)
+
+        return engine
 
 
 class OrderedField(NamedTuple):
