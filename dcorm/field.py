@@ -9,7 +9,6 @@ from dcorm.expression import Expression
 from dcorm.expression_base import ExpressionBase
 from dcorm.nodes import FieldIdentifier
 from dcorm.ordering import Ordering
-from dcorm.sql import sql
 
 
 __all__ = ['Field', 'OrderedField']
@@ -51,7 +50,5 @@ class OrderedField(NamedTuple):
     field: Field
     ordering: Ordering
 
-    @property
-    def __sql__(self) -> str:
-        """Returns an SQL representation of the ordering."""
-        return f'{sql(self.field)} {sql(self.ordering)}'
+    def __sql__(self, engine: Engine) -> Engine:
+        return engine.sql(self.field).sql(self.ordering)
