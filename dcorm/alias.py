@@ -3,11 +3,15 @@
 from dataclasses import dataclass
 from typing import Any, Iterable, Optional
 
+from dcorm.engine import Engine
 from dcorm.field import Field
-from dcorm.sql import sql
+from dcorm.literal import binary
 
 
 __all__ = ['Alias', 'AliasManager']
+
+
+AS = binary('AS')
 
 
 @dataclass
@@ -32,13 +36,11 @@ class Alias:
         """Returns the alias name."""
         return self.name
 
-    @property
-    def __sql__(self) -> str:
-        """Returns an SQL representation of the alias."""
+    def __sql__(self, engine: Engine) -> Engine:
         if self.name is None:
             raise RuntimeError('Alias name not set:', self)
 
-        return f'{sql(self.model)} AS `{self.name}`'
+        return engine.sql(self.model).literal(AS).sql(self.name)
 
 
 class AliasManager:
