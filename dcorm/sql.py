@@ -7,6 +7,7 @@ from decimal import Decimal
 from typing import Any
 
 from dcorm.containers import CONTAINERS
+from dcorm.engine import Engine
 
 
 __all__ = ['SQL', 'sql']
@@ -20,14 +21,14 @@ class SQL:
     parameters: list[str] = field(default_factory=list)
 
 
-def sql(obj: Any) -> str:   # pylint: disable=R0911
+def sql(obj: Any, engine: Engine) -> str:   # pylint: disable=R0911
     """Reutrns an SQL representation of the given object for printing."""
 
     if obj is None:
         return 'NULL'
 
     with suppress(AttributeError):
-        return obj.__sql__
+        return obj.__sql__(engine)
 
     if isinstance(obj, str):
         return obj
@@ -48,6 +49,6 @@ def sql(obj: Any) -> str:   # pylint: disable=R0911
         return str(obj)
 
     if isinstance(obj, CONTAINERS):
-        return f"({', '.join(sql(item) for item in obj)})"
+        return f"({', '.join(sql(item, engine) for item in obj)})"
 
     raise TypeError(f'Cannot convert {type(obj)} to SQL.')
