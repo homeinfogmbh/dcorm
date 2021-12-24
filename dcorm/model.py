@@ -5,8 +5,9 @@ from typing import Any, Optional
 
 from dcorm.alias import Alias
 from dcorm.database import Database
+from dcorm.engline import Engine
 from dcorm.field import Field
-from dcorm.sql import Engine, TableIdentifier
+from dcorm.nodes import TableIdentifier
 
 
 __all__ = ['ModelType', 'Model']

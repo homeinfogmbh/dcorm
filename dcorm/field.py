@@ -4,10 +4,12 @@ from __future__ import annotations
 from dataclasses import MISSING, Field as _Field
 from typing import Any, NamedTuple
 
+from dcorm.engine import Engine
 from dcorm.expression import Expression
 from dcorm.expression_functions import expression_generator
+from dcorm.nodes import FieldIdentifier
 from dcorm.ordering import Ordering
-from dcorm.sql import sql, Engine, FieldIdentifier
+from dcorm.sql import sql
 
 
 __all__ = ['Field', 'OrderedField']

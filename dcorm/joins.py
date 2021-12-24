@@ -5,10 +5,9 @@ from enum import Enum
 from typing import NamedTuple, Optional, Union
 
 from dcorm.alias import Alias
+from dcorm.engine import Engine
 from dcorm.expression import Expression
 from dcorm.model import Model
-from dcorm.relations import find_relation
-from dcorm.sql import sql
 
 
 __all__ = ['JoinType', 'Join']
@@ -42,19 +41,19 @@ class Join(NamedTuple):
     lhs: Union[Alias, Model, Join]
     type: JoinType
     rhs: Union[Alias, Model]
-    on: Expression
+    on: Optional[Expression] = None
 
     def join(self, other: Union[Alias, Model],
              typ: JoinType = JoinType.INNER,
              # pylint: disable-next=C0103
              on: Optional[Expression] = None) -> Join:
         """Returns a subsequent join."""
-        if on is None:
-            on = find_relation(self.rhs, other)
-
         return type(self)(self, typ, other, on)
 
-    @property
-    def __sql__(self) -> str:
-        """Returns an SQL representation of the join."""
-        return SQL.format(*map(sql, self))
+    def __sql__(self, engine: Engine) -> Engine:
+        engine.sql(self.lhs).literal(self.type).sql(self.rhs)
+
+        if self.on is not None:
+            engine.literal('ON').sql(self.on)
+
+        return engine
