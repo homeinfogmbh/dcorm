@@ -46,13 +46,13 @@ class Engine:   # pylint: disable=R0902
         if isinstance(value, (bool, float, int)):
             self._sql.append('%s')
             self._values.append(value)
-
-        if isinstance(value, str):
+        elif isinstance(value, str):
             self._sql.append("'%s'")
             self._values.append(value)
+        else:
+            raise TypeError(f'Cannot serialize value: {type(value)}')
 
-        raise TypeError(f'Cannot serialize value: {type(value)}')
-
+        return self
 
     def add_table_identifier(self, ident: TableIdentifier) -> Engine:
         """Adds a table identifier."""
