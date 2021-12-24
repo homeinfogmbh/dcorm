@@ -20,10 +20,11 @@ def main():
     record = MyModel(3, 'Pee-Wee Herman')
     print('Record:', record)
     print('Field:', MyModel.id, type(MyModel.id))
-    condition = ~(MyModel.id == 1) & (MyModel.name == 'Monty')
+    condition = (~(MyModel.id == 1)) & (MyModel.name == 'Monty')
     print('Condition:', condition)
     query = select(MyModel).where(condition)
-    print('Query:', query.__sql__(engine))
+    print('Engine:', engine := query.__sql__(engine))
+    print('Query:', engine.query_string())
 
 
 if __name__ == '__main__':
