@@ -58,7 +58,7 @@ class FieldSelect(list):
         super().__init__(fields)
 
     def __sql__(self, engine: Engine) -> Engine:
-        for index, field in enumerate(self):
+        for index, field in enumerate(self, start=1):
             engine.sql(field)
 
             if index < len(self):
