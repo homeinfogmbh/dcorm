@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 from contextlib import suppress
-from dataclasses import dataclass, field
+from dataclasses import KW_ONLY, dataclass, field
 from enum import Enum
 from typing import Any, Iterable, Optional, Union
 
@@ -29,6 +29,7 @@ class Engine:   # pylint: disable=R0902
     index_using_precedes_table: bool = False
     limit_max: Optional[int] = None
     nulls_ordering: bool = False
+    _: KW_ONLY
     _sql: list[str] = field(default_factory=list)
     _values: list[str] = field(default_factory=list)
 
