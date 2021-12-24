@@ -29,10 +29,7 @@ class Engine:   # pylint: disable=R0902
     index_using_precedes_table: bool = False
     limit_max: Optional[int] = None
     nulls_ordering: bool = False
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._sql = []
+    _sql: list[str] = field(default_factory=list)
 
     def conflict_statement(self, on_conflict, query):
         """Handle statement conflicts."""
