@@ -21,9 +21,7 @@ class Expression(ExpressionBase):
     rhs: Optional[Any] = None   # Allow for unary operators.
 
     def __sql__(self, engine: Engine) -> Engine:
-        engine.sql(self.lhs).literal(self.operator)
+        if self.rhs is None:
+            return engine.literal(self.operator).sql(self.lhs)
 
-        if self.rhs is not None:
-            engine.sql(self.rhs)
-
-        return engine
+        return engine.sql(self.lhs).literal(self.operator).sql(self.rhs)
