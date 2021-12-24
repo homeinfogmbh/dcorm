@@ -1,18 +1,19 @@
 """Conditional expressions."""
 
 from __future__ import annotations
-from typing import Any, NamedTuple, Optional
+from dataclasses import dataclass
+from typing import Any, Optional
 
 from dcorm.engine import Engine
-from dcorm.expression_functions import expression_generator
+from dcorm.expression_base import ExpressionBase
 from dcorm.operators import Operator
 
 
 __all__ = ['Expression']
 
 
-@expression_generator
-class Expression(NamedTuple):
+@dataclass(eq=False)
+class Expression(ExpressionBase):
     """Conditional expression for WHERE clauses."""
 
     lhs: Any

@@ -1,12 +1,12 @@
 """Field accessors."""
 
 from __future__ import annotations
-from dataclasses import MISSING, Field as _Field
+from dataclasses import MISSING, dataclass, Field as _Field
 from typing import Any, NamedTuple
 
 from dcorm.engine import Engine
 from dcorm.expression import Expression
-from dcorm.expression_functions import expression_generator
+from dcorm.expression_base import ExpressionBase
 from dcorm.nodes import FieldIdentifier
 from dcorm.ordering import Ordering
 from dcorm.sql import sql
@@ -15,8 +15,8 @@ from dcorm.sql import sql
 __all__ = ['Field', 'OrderedField']
 
 
-@expression_generator(typ=Expression)
-class Field(NamedTuple):
+@dataclass(eq=False)
+class Field(ExpressionBase, typ=Expression):
     """Represents a field bound to a model."""
 
     table: Any
