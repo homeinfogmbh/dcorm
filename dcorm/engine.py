@@ -4,7 +4,7 @@ from __future__ import annotations
 from contextlib import suppress
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Iterable, Optional, Union
 
 from dcorm.csq import CSQParens
 from dcorm.field_types import FieldType
@@ -36,21 +36,22 @@ class Engine:   # pylint: disable=R0902
         """Quotes the given string."""
         return self.quotes.format(string)
 
-    def value(self, value: Any, *, raw: bool = False) -> Engine:
+    def raw_value(self, frmt: str, values: Iterable[Any]) -> Engine:
+        """Append values with a pre-defined format string."""
+        self._sql.append(frmt)
+        self._values.extend(values)
+        return self
+
+    def value(self, value: Any) -> Engine:
         """Set a value."""
         if isinstance(value, (bool, float, int)):
-            if not raw:
-                self._sql.append('%s')
-
-            self._values.append(value)
+            self._sql.append('%s')
         elif isinstance(value, str):
-            if not raw:
-                self._sql.append("'%s'")
-
-            self._values.append(value)
+            self._sql.append("'%s'")
         else:
             raise TypeError(f'Cannot serialize value: {type(value)}')
 
+        self._values.append(value)
         return self
 
     def sql(self, obj: Any) -> Engine:
