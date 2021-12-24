@@ -18,5 +18,4 @@ class Path(list):
         return '.'.join(['%s'] *  len(self))
 
     def __sql__(self, engine: Engine) -> Engine:
-        engine.raw_value(f'{engine.quote(self.template)}', self)
-        return engine
+        return engine.raw_value(f'{engine.quote(self.template)}', self)
