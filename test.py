@@ -19,6 +19,7 @@ def main():
     print('Engine:', engine, engine._sql)
     record = MyModel(3, 'Pee-Wee Herman')
     print('Record:', record)
+    record.no_such_attr = 'foo'
     print('Field:', MyModel.id, type(MyModel.id))
     condition = (~(MyModel.id == 1)) & (MyModel.name == 'Monty')
     print('Condition:', condition)
