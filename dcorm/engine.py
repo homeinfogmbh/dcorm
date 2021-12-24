@@ -36,13 +36,17 @@ class Engine:   # pylint: disable=R0902
         """Quotes the given string."""
         return self.quotes.format(string)
 
-    def value(self, value: Any) -> Engine:
+    def value(self, value: Any, *, raw: bool = False) -> Engine:
         """Set a value."""
         if isinstance(value, (bool, float, int)):
-            self._sql.append('%s')
+            if not raw:
+                self._sql.append('%s')
+
             self._values.append(value)
         elif isinstance(value, str):
-            self._sql.append("'%s'")
+            if not raw:
+                self._sql.append("'%s'")
+
             self._values.append(value)
         else:
             raise TypeError(f'Cannot serialize value: {type(value)}')
