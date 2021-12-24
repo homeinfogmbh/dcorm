@@ -9,7 +9,6 @@ from typing import Any, Optional, Union
 from dcorm.csq import CSQParens
 from dcorm.field_types import FieldType
 from dcorm.literal import Literal
-from dcorm.nodes import TableIdentifier, FieldIdentifier
 from dcorm.operators import Operator
 
 
@@ -52,18 +51,7 @@ class Engine:   # pylint: disable=R0902
         else:
             raise TypeError(f'Cannot serialize value: {type(value)}')
 
-        return self
-
-    def add_table_identifier(self, ident: TableIdentifier) -> Engine:
-        """Adds a table identifier."""
-        self._sql.append('.'.join(['%s'] * len(ident)))
-        self._values.extend(ident)
-        return self
-
-    def add_field_identifier(self, ident: FieldIdentifier) -> Engine:
-        """Adds a field identifier."""
-        self._sql.append('.'.join(['%s'] * len(ident)))
-        self._values.extend(ident)
+        print(self._sql, self._values)
         return self
 
     def sql(self, obj: Any) -> Engine:
@@ -71,15 +59,7 @@ class Engine:   # pylint: disable=R0902
         with suppress(AttributeError):
             return obj.__sql__(self)
 
-        if isinstance(obj, TableIdentifier):
-            return self.add_table_identifier(obj)
-
-        if isinstance(obj, FieldIdentifier):
-            return self.add_field_identifier(obj)
-
         return self.value(obj)
-
-        #raise TypeError(f'Invalid SQL node: {type(obj)}')
 
     def literal(self, obj: Union[Enum, Literal]) -> Engine:
         """Processes a literal."""
