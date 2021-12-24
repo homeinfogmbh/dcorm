@@ -7,7 +7,7 @@ from typing import Any, NamedTuple
 from dcorm.expression import Expression
 from dcorm.expression_functions import expression_generator
 from dcorm.ordering import Ordering
-from dcorm.sql import sql
+from dcorm.sql import sql, Engine, FieldIdentifier
 
 
 __all__ = ['Field', 'OrderedField']
@@ -35,9 +35,12 @@ class Field(NamedTuple):
         return self.field.metadata.get('column_name', self.field.name)
 
     @property
-    def __sql__(self) -> str:
-        """Returns an SQL representation of the field."""
-        return f'`{self.table.__namespace__}.{self.name}`'
+    def identifier(self) -> FieldIdentifier:
+        """Returns the field identifier."""
+        return self.table.__table_identifier__.field(self.name)
+
+    def __sql__(self, engine: Engine) -> Engine:
+        return engine(self.identifier)
 
 
 class OrderedField(NamedTuple):
