@@ -15,7 +15,7 @@ class Path(list):
     @property
     def template(self) -> str:
         """Returns the template string."""
-        return '.'.join(['%s'] *  len(self))
+        return '.'.join(['%s'] * len(self))
 
     def __sql__(self, engine: Engine) -> Engine:
         return engine.raw_value(f'{engine.quote(self.template)}', self)
