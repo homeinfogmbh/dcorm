@@ -30,6 +30,7 @@ class Engine:   # pylint: disable=R0902
     limit_max: Optional[int] = None
     nulls_ordering: bool = False
     _sql: list[str] = field(default_factory=list)
+    _values: list[str] = field(default_factory=list)
 
     def conflict_statement(self, on_conflict, query):
         """Handle statement conflicts."""
@@ -45,11 +46,15 @@ class Engine:   # pylint: disable=R0902
 
     def add_table_identifier(self, ident: TableIdentifier) -> Engine:
         """Adds a table identifier."""
-        raise NotImplementedError()
+        self._sql.append('.'.join(['%s'] * len(ident)))
+        self._values.extend(ident)
+        return self
 
     def add_field_identifier(self, ident: FieldIdentifier) -> Engine:
         """Adds a field identifier."""
-        raise NotImplementedError()
+        self._sql.append('.'.join(['%s'] * len(ident)))
+        self._values.extend(ident)
+        return self
 
     def sql(self, obj: Any) -> Engine:
         """Returns an SQL object from any given object."""
@@ -71,3 +76,12 @@ class Engine:   # pylint: disable=R0902
             return self
 
         raise TypeError(f'Invalid literal type: {type(obj)}')
+
+    def query(self) -> tuple[str, list[str]]:
+        """Returns the query parameters."""
+        return (''.join(self._sql), self._values)
+
+    def query_string(self) -> str:
+        """Returns the query string."""
+        template, values = self.query()
+        return template % tuple(values)
