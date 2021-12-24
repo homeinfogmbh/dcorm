@@ -9,7 +9,7 @@ from typing import Any
 from dcorm.containers import CONTAINERS
 
 
-__all__ = ['sql', 'SQL', 'Engine', 'TableIdentifier']
+__all__ = ['sql', 'SQL', 'Engine', 'FieldIdentifier', 'TableIdentifier']
 
 
 def sql(obj: Any) -> str:   # pylint: disable=R0911
@@ -61,8 +61,19 @@ class Engine:   # pylint: disable=R0903
         raise NotImplementedError()
 
 
+class FieldIdentifier(list):
+    """A field identifier."""
+
+    def __init__(self, *path: str):
+        super().__init__(path)
+
+
 class TableIdentifier(list):
     """A table identifier."""
 
     def __init__(self, *path: str):
         super().__init__(path)
+
+    def field(self, name: str) -> FieldIdentifier:
+        """Returns a field identifier from the table identifier."""
+        return FieldIdentifier(*self, name)
