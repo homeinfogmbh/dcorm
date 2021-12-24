@@ -1,4 +1,4 @@
-"""SQL statement generation and base engine."""
+"""SQL statement handling."""
 
 from contextlib import suppress
 from dataclasses import dataclass, field
@@ -9,7 +9,15 @@ from typing import Any
 from dcorm.containers import CONTAINERS
 
 
-__all__ = ['sql', 'SQL', 'Engine', 'FieldIdentifier', 'TableIdentifier']
+__all__ = ['SQL', 'sql']
+
+
+@dataclass
+class SQL:
+    """An SQL object."""
+
+    formatstring: str
+    parameters: list[str] = field(default_factory=list)
 
 
 def sql(obj: Any) -> str:   # pylint: disable=R0911
@@ -43,37 +51,3 @@ def sql(obj: Any) -> str:   # pylint: disable=R0911
         return f"({', '.join(sql(item) for item in obj)})"
 
     raise TypeError(f'Cannot convert {type(obj)} to SQL.')
-
-
-@dataclass
-class SQL:
-    """An SQL object."""
-
-    formatstring: str
-    parameters: list[str] = field(default_factory=list)
-
-
-class Engine:   # pylint: disable=R0903
-    """An SQL engine."""
-
-    def sql(self, obj: Any) -> SQL:
-        """Returns an SQL object from any given object."""
-        raise NotImplementedError()
-
-
-class FieldIdentifier(list):
-    """A field identifier."""
-
-    def __init__(self, *path: str):
-        super().__init__(path)
-
-
-class TableIdentifier(list):
-    """A table identifier."""
-
-    def __init__(self, *path: str):
-        super().__init__(path)
-
-    def field(self, name: str) -> FieldIdentifier:
-        """Returns a field identifier from the table identifier."""
-        return FieldIdentifier(*self, name)
