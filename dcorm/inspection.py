@@ -1,10 +1,9 @@
 """Dataclass inspection."""
 
-from dataclasses import MISSING
 from typing import Iterator, Union
 
 from dcorm.alias import Alias
-from dcorm.field import Field
+from dcorm.field import NOT_SET, Field
 from dcorm.model import Model, ModelType
 
 
@@ -22,7 +21,7 @@ def record_fields(record: Model) -> Iterator[Field]:
     """Yields fields from a record."""
 
     for attribute, field in record.__dataclass_fields__.items():
-        yield Field(type(record), field, getattr(record, attribute, MISSING))
+        yield Field(type(record), field, getattr(record, attribute, NOT_SET))
 
 
 def fields(obj: Union[Alias, Model, ModelType]) -> Iterator[Field]:

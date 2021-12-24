@@ -1,7 +1,7 @@
 """Field accessors."""
 
 from __future__ import annotations
-from dataclasses import MISSING, dataclass, Field as _Field
+from dataclasses import dataclass, Field as _Field
 from typing import Any, NamedTuple
 
 from dcorm.engine import Engine
@@ -11,7 +11,10 @@ from dcorm.nodes import FieldIdentifier
 from dcorm.ordering import Ordering
 
 
-__all__ = ['Field', 'OrderedField']
+__all__ = ['NOT_SET', 'Field', 'OrderedField']
+
+
+NOT_SET = object()
 
 
 @dataclass(eq=False)
@@ -20,7 +23,7 @@ class Field(ExpressionBase, typ=Expression):
 
     table: Any
     field: _Field
-    value: Any = MISSING
+    value: Any = NOT_SET
 
     def asc(self) -> OrderedField:
         """Returns an ordered field with ascending ordering."""
