@@ -6,6 +6,7 @@ from warnings import warn
 
 from dcorm.alias import Alias, AliasManager
 from dcorm.database import Database
+from dcorm.engine import Engine
 from dcorm.expression import Expression
 from dcorm.field import Field, OrderedField
 from dcorm.inspection import fields
@@ -55,14 +56,12 @@ class SelectQuery(Query):
         self._offset: Optional[int] = None
         self._alias_manager: AliasManager = AliasManager()
 
-    @property
-    def __sql__(self) -> str:
-        """Returns an SQL representation of the query."""
-        query = sql(self._operation)
+    def __sql__(self, engine: Engine) -> Engine:
         fields_ = ', '.join(sql(field) for field in self._fields)
         from_ = sql(self._from)
         where = sql(self._where)
-        return ' '.join([query, fields_, 'FROM', from_, 'WHERE', where])
+        return engine.literal(self._operation).sql(fields_).sql(from_).sql(
+            where)
 
     @property
     def _fields(self) -> Iterator[Field]:
