@@ -28,8 +28,3 @@ class FieldType(Enum):
     UUID = 'TEXT'
     UUIDB = 'BLOB'
     VARCHAR = 'VARCHAR'
-
-    @property
-    def __sql__(self) -> str:
-        """Returns an SQL representation of the field type."""
-        return self.value
