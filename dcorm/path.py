@@ -1,6 +1,7 @@
 """SQL statement nodes."""
 
 from dcorm.engine import Engine
+from dcorm.literal import Literal
 
 
 __all__ = ['Path']
@@ -18,7 +19,9 @@ class Path(list):
         return '.'.join(['%s'] *  len(self))
 
     def __sql__(self, engine: Engine) -> Engine:
-        sql = f'{engine.quote(self.template)}'
-        engine._sql.append(sql)         # pylint: disable=W0212
-        engine._values.extend(self)     # pylint: disable=W0212
+        engine.literal(Literal(f'{engine.quote(self.template)}'))
+
+        for value in self:
+            engine.value(value, raw=True)
+
         return engine
