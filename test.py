@@ -3,6 +3,7 @@
 from datetime import datetime
 
 from dcorm import field, select, Model
+from dcorm.engine import Engine
 
 
 class MyModel(Model):
@@ -14,13 +15,15 @@ class MyModel(Model):
 
 def main():
 
+    engine = Engine()
+    print('Engine:', engine, engine._sql)
     record = MyModel(3, 'Pee-Wee Herman')
     print('Record:', record)
     print('Field:', MyModel.id, type(MyModel.id))
     condition = ~(MyModel.id == 1) & (MyModel.name == 'Monty')
     print('Condition:', condition)
     query = select(MyModel).where(condition)
-    print('Query:', query.__sql__)
+    print('Query:', query.__sql__(engine))
 
 
 if __name__ == '__main__':
