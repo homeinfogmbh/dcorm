@@ -22,7 +22,7 @@ class Engine:   # pylint: disable=R0902
     field_types: dict[str, FieldType] = field(default_factory=dict)
     operators: dict[Operator, Operator] = field(default_factory=dict)
     param: str = '?'
-    quote: str = '""'
+    quotes: str = '"{}"'
     csq_parens: CSQParens = CSQParens.NEVER
     for_update: bool = False
     index_schema_prefix: bool = False
@@ -31,6 +31,10 @@ class Engine:   # pylint: disable=R0902
     nulls_ordering: bool = False
     _sql: list[str] = field(default_factory=list)
     _values: list[str] = field(default_factory=list)
+
+    def quote(self, string: str) -> str:
+        """Quotes the given string."""
+        return self.quotes.format(string)
 
     def conflict_statement(self, on_conflict, query):
         """Handle statement conflicts."""
