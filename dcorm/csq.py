@@ -1,6 +1,6 @@
 """Compund sub-queries modes."""
 
-from enum import Enum
+from enum import Enum, auto
 
 
 __all__ = ['CSQParens']
