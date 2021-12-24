@@ -20,3 +20,4 @@ class Path(list):
     def __sql__(self, engine: Engine) -> Engine:
         engine._sql.append(self.template)   # pylint: disable=W0212
         engine._values.extend(self)         # pylint: disable=W0212
+        return engine
