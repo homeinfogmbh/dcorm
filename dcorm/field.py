@@ -8,8 +8,8 @@ from dcorm.engine import Engine
 from dcorm.expression import Expression
 from dcorm.expression_base import ExpressionBase
 from dcorm.literal import unary
-from dcorm.nodes import FieldIdentifier
 from dcorm.ordering import Ordering
+from dcorm.path import Path
 
 
 __all__ = ['NOT_SET', 'Field', 'FieldSelect', 'OrderedField']
@@ -41,12 +41,14 @@ class Field(ExpressionBase, typ=Expression):
         return self.field.metadata.get('column_name', self.field.name)
 
     @property
-    def identifier(self) -> FieldIdentifier:
+    def path(self) -> Path:
         """Returns the field identifier."""
-        return self.table.__table_identifier__.field(self.name)
+        path = self.table.__table_path__
+        path.append(self.name)
+        return path
 
     def __sql__(self, engine: Engine) -> Engine:
-        return engine.sql(self.identifier)
+        return engine.sql(self.path)
 
 
 class FieldSelect(list):

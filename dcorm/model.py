@@ -7,7 +7,7 @@ from dcorm.alias import Alias
 from dcorm.database import Database
 from dcorm.engine import Engine
 from dcorm.field import Field
-from dcorm.nodes import TableIdentifier
+from dcorm.path import Path
 
 
 __all__ = ['ModelType', 'Model']
@@ -25,14 +25,14 @@ class ModelType(type):
         return None
 
     @property
-    def __table_identifier__(cls) -> TableIdentifier:
+    def __table_path__(cls) -> Path:
         if cls.__schema__ is None:
-            return TableIdentifier(cls.__table_name__)
+            return Path(cls.__table_name__)
 
-        return TableIdentifier(cls.__schema__, cls.__table_name__)
+        return Path(cls.__schema__, cls.__table_name__)
 
     def __sql__(cls, engine: Engine) -> Engine:
-        return engine.sql(cls.__table_identifier__)
+        return engine.sql(cls.__table_path__)
 
 
 class Model(metaclass=ModelType):
