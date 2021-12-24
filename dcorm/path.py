@@ -18,6 +18,7 @@ class Path(list):
         return '.'.join(['%s'] *  len(self))
 
     def __sql__(self, engine: Engine) -> Engine:
-        engine._sql.append(self.template)   # pylint: disable=W0212
-        engine._values.extend(self)         # pylint: disable=W0212
+        sql = f'{engine.quote[0]}{self.template}{engine.quote[1]}'
+        engine._sql.append(sql)         # pylint: disable=W0212
+        engine._values.extend(self)     # pylint: disable=W0212
         return engine
