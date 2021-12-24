@@ -68,5 +68,6 @@ class Engine:   # pylint: disable=R0902
 
         if isinstance(obj, Literal):
             self._sql.append(str(obj))
+            return self
 
         raise TypeError(f'Invalid literal type: {type(obj)}')
