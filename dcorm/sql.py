@@ -28,7 +28,7 @@ def sql(obj: Any, engine: Engine) -> str:   # pylint: disable=R0911
         return 'NULL'
 
     with suppress(AttributeError):
-        return obj.__sql__(engine)
+        return obj.__sql__(engine).query_string()
 
     if isinstance(obj, str):
         return obj
