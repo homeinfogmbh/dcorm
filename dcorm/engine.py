@@ -1,6 +1,7 @@
 """SQL engine configuration."""
 
 from __future__ import annotations
+from contextlib import suppress
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Optional, Union
@@ -58,6 +59,9 @@ class Engine:   # pylint: disable=R0902
 
     def sql(self, obj: Any) -> Engine:
         """Returns an SQL object from any given object."""
+        with suppress(AttributeError):
+            return obj.__sql__(self)
+
         if isinstance(obj, TableIdentifier):
             return self.add_table_identifier(obj)
 
